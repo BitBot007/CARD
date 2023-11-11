@@ -1,0 +1,8 @@
+{
+  "name": "GameServer",
+  "version": "0.0.1",
+  "description": "Game Server for CARD",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
