@@ -1,20 +1,48 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from "App/Models/User";
+import SignInValidator from 'App/Validators/SignInValidator';
+import SignUpValidator from 'App/Validators/SignUpValidator';
 
 export default class AuthController {
-    public async register({ request }: HttpContextContract) {
-        await User.create(request.only(['email', 'password', 'username']));
-        return this.login.apply(null, arguments);
+    public async signUp({ request, response, auth }: HttpContextContract) {
+        let payload;
+        try {
+            payload = await request.validate(SignUpValidator)
+        } catch (e) {
+            return response.badRequest(e.messages)
+        }
+
+        const { email, username, password } = payload
+        await User.create(payload)
+        await auth.attempt(email ?? username, password);
+        return await this.auth.apply(this, arguments);
+        
     }
 
-    public async login({ request, auth }: HttpContextContract) {
-        const { email, password } = request.all();
-        const token = await auth.attempt(email, password);
-        return token;
+    public async signIn({ request, response, auth }: HttpContextContract) {
+        let payload;
+        try {
+            payload = await request.validate(SignInValidator)
+        } catch (e) {
+            return response.badRequest(e.messages)
+        }
+
+        const { usernameEmail, password } = payload
+        await auth.attempt(usernameEmail, password);
+        return await this.auth.apply(this, arguments);
+        
     }
 
     public async logout({ auth, response }: HttpContextContract) {
-        await auth.logout();
+        try {
+            await auth.logout();
+        } catch (e) {
+            return response.status(500);
+        }
         return response.status(200);
+    }
+
+    public async auth({ auth }: HttpContextContract) {
+        return auth?.user?.toJSON();
     }
 }
