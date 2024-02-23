@@ -1,6 +1,6 @@
 <template>
-    <div class="flex justify-between">
-        <UiButton variant="ghost" class="my-2">Cards Against Humanity</UiButton>
+    <div class="container flex justify-between">
+        <span class="font-bold text-2xl mt-3">CARD</span>
         <Auth/>
     </div>
 </template>

@@ -27,10 +27,14 @@ export default class AuthController {
             return response.badRequest(e.messages)
         }
 
-        const { usernameEmail, password } = payload
-        await auth.attempt(usernameEmail, password);
+        try {
+            const { usernameEmail, password } = payload
+            await auth.attempt(usernameEmail, password);
+        } catch (e) {
+            return response.badRequest(e.messages)
+        }
+
         return await this.auth.apply(this, arguments);
-        
     }
 
     public async logout({ auth, response }: HttpContextContract) {

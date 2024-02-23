@@ -1,7 +1,8 @@
 <template>
-    <div>
-        <MainNavigation class="container"/>
-        <UiSeparator decorative/>
+    <div class="h-full flex flex-col">
+        <MainNavigation class="flex-none"/>
+        <UiSeparator class="flex-none" decorative/>
+        <NuxtPage class="grow"/>
     </div>
 </template>
 
@@ -11,6 +12,10 @@ import { MainNavigation } from '@/components/layout/main-navigation'
 
 </script>
 
-<style scoped>
-    
+<style global>
+    html,
+    body,
+    div#__nuxt {
+        height: 100%;
+    }
 </style>
